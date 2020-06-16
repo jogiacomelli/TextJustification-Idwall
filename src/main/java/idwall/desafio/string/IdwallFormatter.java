@@ -1,14 +1,11 @@
 package idwall.desafio.string;
 
-import java.util.Arrays;
-import java.util.List;
+import idwall.desafio.utils.Constants;
 
 /**
  * Created by Rodrigo Catão Araujo on 06/02/2018.
  */
 public class IdwallFormatter extends StringFormatter {
-
-    boolean justify;
 
     public IdwallFormatter() {
         super();
@@ -18,6 +15,7 @@ public class IdwallFormatter extends StringFormatter {
         super();
         setJustify(justify);
     }
+
     public IdwallFormatter(Integer limit) {
         super();
         setLimit(limit);
@@ -37,30 +35,27 @@ public class IdwallFormatter extends StringFormatter {
      */
     @Override
     public String format(String text) {
-        return breakLinesByBruteForce(text);
+        return breakLinesGreedy(text);
     }
 
-    private String breakLinesByBruteForce(String text) {
-        String[] paragraphs = text.split("\n");
+    private String breakLinesGreedy(String text) {
+        String[] paragraphs = text.split(Constants.NEW_LINE);
         StringBuilder textWithBreaks = new StringBuilder();
         StringBuilder line;
 
         for(String paragraph : paragraphs ) {
-            String[] words = paragraph.split(" " );
+            String[] words = paragraph.split(Constants.WHITESPACE);
             line = new StringBuilder();
 
             for (int i = 0; i < words.length; i++) {
-                if (wordFitsInLine(words[i], line.toString())) {
-                    line.append(words[i].trim()).append(" ");
-                } else {
+                if (!wordFitsInLine(words[i], line)) {
                     addNewLine(textWithBreaks, line);
-
                     line = new StringBuilder();
-                    if(!isLastLine(words, i))
-                      line.append(words[i].trim()).append(" ");
                 }
 
-                if(isLastLine(words, i) && line.length() > 0) {
+                line.append(words[i].trim()).append(Constants.WHITESPACE);
+
+                if(isLastWordOfLastLine(words.length, i) && line.length() > 0) {
                     addNewLine(textWithBreaks, line);
                 }
             }
@@ -69,58 +64,49 @@ public class IdwallFormatter extends StringFormatter {
         return textWithBreaks.toString();
     }
 
-    private boolean wordFitsInLine (String word, String line) {
+    private boolean wordFitsInLine (String word, StringBuilder line) {
         return (line.length() + word.trim().length()) <= getLimit();
     }
 
-    private boolean isLastLine(String[] words, int i) {
-        return i == words.length - 1;
+    private boolean isLastWordOfLastLine(int numberOfWords, int i) {
+        return i == numberOfWords - 1;
     }
 
     private void addNewLine(StringBuilder text, StringBuilder line) {
         String newLine = line.toString().trim();
+
         if(isJustify() && newLine.length() < getLimit()) {
             newLine = addSpacesToLine(newLine);
         }
         text.append(newLine);
-        text.append("\n");
+        text.append(Constants.NEW_LINE);
     }
 
     private String addSpacesToLine(String newLine) {
-        List<String> words;
+        String[] words;
+        StringBuilder lineWithSpaces;
         int diff = getLimit() - newLine.length();
 
-        StringBuilder buildLineWithSpaces;
-
-        if(newLine.length() < getLimit() / 2) {
+        if(newLine.length() < getLimit() / 3) {
             return newLine;
         }
 
         while(diff > 0) {
-           words = Arrays.asList(newLine.split(" "));
+           words = newLine.split(Constants.WHITESPACE);
+           lineWithSpaces = new StringBuilder();
+           for (int i = 0; i < words.length; i++) {
+               String word = words[i];
 
-           buildLineWithSpaces = new StringBuilder();
-           for (int i = 0; i < words.size(); i++) {
-               String word = words.get(i);
+               lineWithSpaces.append(word).append(Constants.WHITESPACE);
 
-               buildLineWithSpaces.append(word).append(" ");
-
-               if (diff > 0 && i < words.size() - 1) {
-                   buildLineWithSpaces.append(" ");
+               if (diff > 0 && i < words.length - 1) {
+                   lineWithSpaces.append(Constants.WHITESPACE);
                    diff--;
                }
            }
-           newLine = buildLineWithSpaces.toString().trim();
-       }
+           newLine = lineWithSpaces.toString().trim();
+        }
 
         return newLine;
-    }
-
-    public boolean isJustify() {
-        return justify;
-    }
-
-    public void setJustify(boolean justify) {
-        this.justify = justify;
     }
 }
