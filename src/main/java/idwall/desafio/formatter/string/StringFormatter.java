@@ -1,4 +1,4 @@
-package idwall.desafio.string;
+package idwall.desafio.formatter.string;
 
 /**
  * Created by Rodrigo Catão Araujo on 06/02/2018.

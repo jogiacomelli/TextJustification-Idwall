@@ -1,4 +1,4 @@
-package idwall.desafio.string;
+package idwall.desafio.formatter.string;
 
 import idwall.desafio.utils.Constants;
 
@@ -48,15 +48,16 @@ public class IdwallFormatter extends StringFormatter {
             line = new StringBuilder();
 
             for (int i = 0; i < words.length; i++) {
+                boolean isLastLine = isLastWordOfLastLine(words.length, i);
                 if (!wordFitsInLine(words[i], line)) {
-                    addNewLine(textWithBreaks, line);
+                    addNewLine(textWithBreaks, line, isLastLine);
                     line = new StringBuilder();
                 }
 
                 line.append(words[i].trim()).append(Constants.WHITESPACE);
 
-                if(isLastWordOfLastLine(words.length, i) && line.length() > 0) {
-                    addNewLine(textWithBreaks, line);
+                if(isLastLine && line.length() > 0) {
+                    addNewLine(textWithBreaks, line, true);
                 }
             }
         }
@@ -72,10 +73,10 @@ public class IdwallFormatter extends StringFormatter {
         return i == numberOfWords - 1;
     }
 
-    private void addNewLine(StringBuilder text, StringBuilder line) {
+    private void addNewLine(StringBuilder text, StringBuilder line, boolean isLastLine) {
         String newLine = line.toString().trim();
 
-        if(isJustify() && newLine.length() < getLimit()) {
+        if(!isLastLine && isJustify() && newLine.length() < getLimit()) {
             newLine = addSpacesToLine(newLine);
         }
         text.append(newLine);
@@ -94,11 +95,13 @@ public class IdwallFormatter extends StringFormatter {
         int spacesBetweenWords = (numberOfGaps > 0) ? (totalSpaces / numberOfGaps) : 1; // Spaces needed between every word.
         int extraSpaces = (numberOfGaps > 0) ? (totalSpaces % numberOfGaps) : 0; // number of extra spaces needed.
 
-        for(String word : words) {
+        for(int index = 0; index < words.length; index++) {
+            String word = words[index];
+
             lineWithSpaces.append(word);
 
             // If is the last word in the line;
-            if(word.equals(words[words.length - 1])) {
+            if(index == words.length - 1) {
                 break;
             }
 
