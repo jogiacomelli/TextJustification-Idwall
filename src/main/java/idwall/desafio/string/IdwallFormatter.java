@@ -84,28 +84,39 @@ public class IdwallFormatter extends StringFormatter {
 
     private String addSpacesToLine(String newLine) {
         String[] words;
-        StringBuilder lineWithSpaces;
-        int diff = getLimit() - newLine.length();
+        StringBuilder lineWithSpaces = new StringBuilder();
 
         if(newLine.length() < getLimit() / 3) {
             return newLine;
         }
 
-        while(diff > 0) {
-           words = newLine.split(Constants.WHITESPACE);
-           lineWithSpaces = new StringBuilder();
-           for (int i = 0; i < words.length; i++) {
-               String word = words[i];
+        words = newLine.split(Constants.WHITESPACE);
 
-               lineWithSpaces.append(word).append(Constants.WHITESPACE);
+        int diff = getLimit() - newLine.length();
+        int numberOfGaps = words.length - 1;
+        int totalSpaces = diff + numberOfGaps;
+        int spacesBetweenWords = totalSpaces / numberOfGaps; // Spaces needed between every word.
+        int extraSpaces = totalSpaces % numberOfGaps; // number of extra spaces needed.
 
-               if (diff > 0 && i < words.length - 1) {
-                   lineWithSpaces.append(Constants.WHITESPACE);
-                   diff--;
-               }
-           }
-           newLine = lineWithSpaces.toString().trim();
+        for(String word : words) {
+            lineWithSpaces.append(word);
+
+            // If is the last word in the line;
+            if(word.equals(words[words.length - 1])) {
+                break;
+            }
+
+            for (int i = 0; i < spacesBetweenWords; i++) {
+                lineWithSpaces.append(Constants.WHITESPACE);
+            }
+
+            if(extraSpaces > 0) {
+                lineWithSpaces.append(Constants.WHITESPACE);
+                extraSpaces--;
+            }
         }
+
+        newLine = lineWithSpaces.toString().trim();
 
         return newLine;
     }
