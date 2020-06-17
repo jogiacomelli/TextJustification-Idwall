@@ -86,17 +86,13 @@ public class IdwallFormatter extends StringFormatter {
         String[] words;
         StringBuilder lineWithSpaces = new StringBuilder();
 
-        if(newLine.length() < getLimit() / 3) {
-            return newLine;
-        }
-
         words = newLine.split(Constants.WHITESPACE);
 
         int diff = getLimit() - newLine.length();
         int numberOfGaps = words.length - 1;
         int totalSpaces = diff + numberOfGaps;
-        int spacesBetweenWords = totalSpaces / numberOfGaps; // Spaces needed between every word.
-        int extraSpaces = totalSpaces % numberOfGaps; // number of extra spaces needed.
+        int spacesBetweenWords = (numberOfGaps > 0) ? (totalSpaces / numberOfGaps) : 1; // Spaces needed between every word.
+        int extraSpaces = (numberOfGaps > 0) ? (totalSpaces % numberOfGaps) : 0; // number of extra spaces needed.
 
         for(String word : words) {
             lineWithSpaces.append(word);
