@@ -70,7 +70,7 @@ public class FormatterMenu {
         final StringFormatter sf = new IdwallFormatter(limit, justify);
         String outputText = sf.format(text);
 
-        WriteFile.writeTextToFile(outputText,  "/home/joseane/output.txt");
+        WriteFile.writeTextToFile(outputText,  "output.txt");
 
         // Print output text
         System.out.println("Output: ");
@@ -104,7 +104,7 @@ public class FormatterMenu {
     }
 
     private static Boolean readNewJustify() {
-        System.out.println("Say 1 if you want your text beautifully justified, or 0 if you don't:");
+        System.out.println("Say true if you want your text beautifully justified, or false if you don't:");
         return in.nextBoolean();
     }
 
