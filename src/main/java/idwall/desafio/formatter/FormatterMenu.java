@@ -64,7 +64,8 @@ public class FormatterMenu {
     }
 
     private static void executeAndWriteToFile() {
-        System.out.println("Executing the algorithm with the following data:\n");
+        System.out.println("The result text will be saved to output.txt.\n" +
+                "Executing the algorithm with the following data:\n");
         printInputData();
         // Run IdwallFormatter
         final StringFormatter sf = new IdwallFormatter(limit, justify);
@@ -78,7 +79,7 @@ public class FormatterMenu {
     }
 
     private static String readNewText() {
-        System.out.println("You can tell me the text itself, or give me the path to a text file. You choose :)");
+        System.out.println("You can tell me the text itself, or give me the path to a text file. You chose :)");
         Scanner scanner = new Scanner(System.in);
         String pathOrText = scanner.nextLine();
 
